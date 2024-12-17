@@ -11,6 +11,14 @@ import { useManagement } from "@/contexts/ManagementContext"
 import { Layout } from "@/components/layout"
 import Image from "next/image"
 
+type Employee = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  photo?: string;
+};
+
 export default function EmployeesPage() {
   const { employees, addEmployee, updateEmployee, removeEmployee } = useManagement()
 
@@ -22,11 +30,16 @@ export default function EmployeesPage() {
 
   const handleAddEmployee = () => {
     if (newEmployeeName && newEmployeeEmail && newEmployeePhone) {
-      addEmployee({ name: newEmployeeName, email: newEmployeeEmail, phone: newEmployeePhone, photo: newEmployeePhoto })
-      setNewEmployeeName("")
-      setNewEmployeeEmail("")
-      setNewEmployeePhone("")
-      setNewEmployeePhoto("")
+      addEmployee({
+        name: newEmployeeName,
+        email: newEmployeeEmail,
+        phone: newEmployeePhone,
+        photo: newEmployeePhoto,
+      });
+      setNewEmployeeName("");
+      setNewEmployeeEmail("");
+      setNewEmployeePhone("");
+      setNewEmployeePhoto("");
     }
   }
 
