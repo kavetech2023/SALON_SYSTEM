@@ -11,13 +11,7 @@ import { useManagement } from "@/contexts/ManagementContext"
 import { Layout } from "@/components/layout"
 import Image from "next/image"
 
-type Employee = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  photo?: string;
-};
+// Removed the Employee type definition as it was not being used
 
 export default function EmployeesPage() {
   const { employees, addEmployee, updateEmployee, removeEmployee } = useManagement()
