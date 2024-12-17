@@ -17,19 +17,19 @@ export default function ProductsServicesPage() {
   const [newProductName, setNewProductName] = useState("")
   const [newProductPrice, setNewProductPrice] = useState("")
   const [newProductStock, setNewProductStock] = useState("")
-  const [editingProduct, setEditingProduct] = useState<{ _id: string; name: string; price: number; stock: number } | null>(null)
+  const [editingProduct, setEditingProduct] = useState<{ id: string; name: string; price: number; stock: number } | null>(null)
 
   const [newServiceName, setNewServiceName] = useState("")
   const [newServicePrice, setNewServicePrice] = useState("")
-  const [editingService, setEditingService] = useState<{ _id: string; name: string; price: number } | null>(null)
+  const [editingService, setEditingService] = useState<{ id: string; name: string; price: number } | null>(null)
 
   const handleAddProduct = () => {
     if (newProductName && newProductPrice && newProductStock) {
-      addProduct({ 
-        name: newProductName, 
-        price: parseFloat(newProductPrice), 
-        stock: parseInt(newProductStock) 
-      })
+      addProduct(
+        newProductName,
+        parseFloat(newProductPrice),
+        parseInt(newProductStock)
+      )
       setNewProductName("")
       setNewProductPrice("")
       setNewProductStock("")
@@ -38,7 +38,7 @@ export default function ProductsServicesPage() {
 
   const handleUpdateProduct = () => {
     if (editingProduct) {
-      updateProduct(editingProduct._id, { 
+      updateProduct(editingProduct.id, { 
         name: editingProduct.name, 
         price: editingProduct.price, 
         stock: editingProduct.stock
@@ -61,7 +61,7 @@ export default function ProductsServicesPage() {
 
   const handleUpdateService = () => {
     if (editingService) {
-      updateService(editingService._id, { 
+      updateService(editingService.id, { 
         name: editingService.name, 
         price: editingService.price
       })
@@ -117,9 +117,9 @@ export default function ProductsServicesPage() {
                 </TableHeader>
                 <TableBody>
                   {products.map((product) => (
-                    <TableRow key={product._id}>
+                    <TableRow key={product.id}>
                       <TableCell>{product.name}</TableCell>
-                      <TableCell>${product.price.toFixed(2)}</TableCell>
+                      <TableCell>Kshs {product.price.toFixed(2)}</TableCell>
                       <TableCell>{product.stock}</TableCell>
                       <TableCell>
                         <Dialog>
@@ -170,7 +170,7 @@ export default function ProductsServicesPage() {
                             <Button onClick={handleUpdateProduct}>Save Changes</Button>
                           </DialogContent>
                         </Dialog>
-                        <Button variant="destructive" size="sm" onClick={() => handleRemoveProduct(product._id)}>Remove</Button>
+                        <Button variant="destructive" size="sm" onClick={() => handleRemoveProduct(product.id)}>Remove</Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -202,9 +202,9 @@ export default function ProductsServicesPage() {
                 </TableHeader>
                 <TableBody>
                   {services.map((service) => (
-                    <TableRow key={service._id}>
+                    <TableRow key={service.id}>
                       <TableCell>{service.name}</TableCell>
-                      <TableCell>${service.price.toFixed(2)}</TableCell>
+                      <TableCell>Kshs {service.price.toFixed(2)}</TableCell>
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
@@ -242,7 +242,7 @@ export default function ProductsServicesPage() {
                             <Button onClick={handleUpdateService}>Save Changes</Button>
                           </DialogContent>
                         </Dialog>
-                        <Button variant="destructive" size="sm" onClick={() => handleRemoveService(service._id)}>Remove</Button>
+                        <Button variant="destructive" size="sm" onClick={() => handleRemoveService(service.id)}>Remove</Button>
                       </TableCell>
                     </TableRow>
                   ))}

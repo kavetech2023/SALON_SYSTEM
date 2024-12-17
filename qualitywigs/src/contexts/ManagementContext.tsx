@@ -35,6 +35,8 @@ type ManagementContextType = {
   addProduct: (name: string, price: number, stock: number) => void
   removeProduct: (id: string) => void
   loadEmployeesAndServices: () => void
+  updateService: (id: string, service: { name: string; price: number }) => void
+  updateProduct: (id: string, product: { name: string; price: number; stock: number }) => void
 }
 
 const ManagementContext = createContext<ManagementContextType | undefined>(undefined)
@@ -112,6 +114,22 @@ export const ManagementProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     localStorage.setItem('products', JSON.stringify(updatedProducts))
   }
 
+  const updateService = (id: string, updatedService: { name: string; price: number }) => {
+    const updatedServices = services.map(service => 
+      service.id === id ? { ...service, ...updatedService } : service
+    )
+    setServices(updatedServices)
+    localStorage.setItem('services', JSON.stringify(updatedServices))
+  }
+
+  const updateProduct = (id: string, updatedProduct: { name: string; price: number; stock: number }) => {
+    const updatedProducts = products.map(product => 
+      product.id === id ? { ...product, ...updatedProduct } : product
+    )
+    setProducts(updatedProducts)
+    localStorage.setItem('products', JSON.stringify(updatedProducts))
+  }
+
   return (
     <ManagementContext.Provider value={{ 
       employees, 
@@ -124,7 +142,9 @@ export const ManagementProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       removeService,
       addProduct,
       removeProduct,
-      loadEmployeesAndServices
+      loadEmployeesAndServices,
+      updateService,
+      updateProduct,
     }}>
       {children}
     </ManagementContext.Provider>
