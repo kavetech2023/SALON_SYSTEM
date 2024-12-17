@@ -3,7 +3,8 @@ import { Inter } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
 import { SalesProvider } from '@/contexts/SalesContext'
 import { ManagementProvider } from '@/contexts/ManagementContext'
-import { Toaster } from "@/components/ui/toaster"
+import { ToastProvider } from "@/components/ui/toast"
+import { Toast } from "@/components/ui/toast"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,8 +24,10 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ManagementProvider>
             <SalesProvider>
-              {children}
-              <Toaster />
+              <ToastProvider>
+                {children}
+                <Toast />
+              </ToastProvider>
             </SalesProvider>
           </ManagementProvider>
         </ThemeProvider>

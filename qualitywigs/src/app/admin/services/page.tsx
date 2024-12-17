@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { useManagement } from "@/contexts/ManagementContext"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { X } from "lucide-react"
+import { toast } from "@/components/ui/toast"
 
 export default function ServicesPage() {
   const [newService, setNewService] = useState({ name: "", price: "" })
@@ -16,19 +17,19 @@ export default function ServicesPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!newService.name || !newService.price) {
-      console.error("Please fill in all fields")
+      toast.error("Please fill in all fields")
       return
     }
 
     const price = parseFloat(newService.price)
     if (isNaN(price)) {
-      console.error("Please enter a valid price")
+      toast.error("Please enter a valid price")
       return
     }
 
     addService(newService.name, price)
     setNewService({ name: "", price: "" })
-    console.log("Service added successfully")
+    toast.success("Service added successfully")
   }
 
   return (
