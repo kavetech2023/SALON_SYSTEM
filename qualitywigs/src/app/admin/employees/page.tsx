@@ -96,7 +96,7 @@ export default function EmployeesPage() {
                 <TableRow key={employee.id}>
                   <TableCell>
                     <Image
-                      src={employee.photo || "/placeholder.svg"}
+                      src={employee.photo ? employee.photo : "/placeholder.svg"}
                       alt={employee.name}
                       width={40}
                       height={40}
