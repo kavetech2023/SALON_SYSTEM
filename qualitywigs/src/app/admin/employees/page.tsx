@@ -28,7 +28,6 @@ export default function EmployeesPage() {
         name: newEmployeeName,
         email: newEmployeeEmail,
         phone: newEmployeePhone,
-        photo: newEmployeePhoto,
       });
       setNewEmployeeName("");
       setNewEmployeeEmail("");
@@ -43,7 +42,6 @@ export default function EmployeesPage() {
         name: editingEmployee.name, 
         email: editingEmployee.email, 
         phone: editingEmployee.phone,
-        photo: editingEmployee.photo
       })
       setEditingEmployee(null)
     }
@@ -148,17 +146,6 @@ export default function EmployeesPage() {
                               id="edit-phone"
                               value={editingEmployee?.phone || ''}
                               onChange={(e) => setEditingEmployee(prev => prev ? {...prev, phone: e.target.value} : null)}
-                              className="col-span-3"
-                            />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="edit-photo" className="text-right">
-                              Photo URL
-                            </Label>
-                            <Input
-                              id="edit-photo"
-                              value={editingEmployee?.photo || ''}
-                              onChange={(e) => setEditingEmployee(prev => prev ? {...prev, photo: e.target.value} : null)}
                               className="col-span-3"
                             />
                           </div>
