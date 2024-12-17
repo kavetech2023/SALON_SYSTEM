@@ -9,7 +9,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button"
 import { Layout } from "@/components/layout"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { toast } from "@/components/ui/toast"
 
 export default function AdminDashboard() {
   const { sales, loadSales } = useSales()
@@ -47,7 +46,7 @@ export default function AdminDashboard() {
   const refreshData = () => {
     loadSales()
     loadEmployeesAndServices()
-    toast.success("Data refreshed successfully!");
+    // toast.success("Data refreshed successfully!"); // Removed toast functionality
   }
 
   return (
