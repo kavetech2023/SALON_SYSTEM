@@ -9,43 +9,58 @@ import { useSales } from "@/contexts/SalesContext"
 import { useManagement } from "@/contexts/ManagementContext"
 import Image from "next/image"
 import confetti from 'canvas-confetti'
-import { Layout } from "@/components/layout"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function EmployeeDashboard() {
   const [selectedEmployee, setSelectedEmployee] = useState("")
   const [selectedService, setSelectedService] = useState("")
+  const [selectedProduct, setSelectedProduct] = useState("")
   const [customerName, setCustomerName] = useState("")
   const [customerContact, setCustomerContact] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
+  const [productSearchTerm, setProductSearchTerm] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
   const [complaintMessage, setComplaintMessage] = useState("")
   const { addSale, notifyAdmin } = useSales()
-  const { employees, services } = useManagement()
+  const { employees, services, products } = useManagement()
 
   const filteredServices = services.filter(service =>
     service.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(productSearchTerm.toLowerCase())
+  )
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!selectedEmployee || !selectedService) {
-      console.error("Please select an employee and a service")
+    if (!selectedEmployee || (!selectedService && !selectedProduct)) {
+      console.error("Please select an employee and a service or product")
       return
     }
-    const service = services.find(s => s.id === selectedService)
-    if (!service) {
-      console.error("Invalid service selected")
+
+    let saleItem
+    if (selectedService) {
+      saleItem = services.find(s => s.id === selectedService)
+    } else {
+      saleItem = products.find(p => p.id === selectedProduct)
+    }
+
+    if (!saleItem) {
+      console.error("Invalid selection")
       return
     }
+
     const newSale = {
-      service: service.name,
-      amount: service.price,
+      service: saleItem.name,
+      amount: saleItem.price,
       employeeName: selectedEmployee,
       customerName: customerName || undefined,
       customerContact: customerContact || undefined,
     }
+
     addSale(newSale)
     confetti({
       particleCount: 100,
@@ -54,6 +69,7 @@ export default function EmployeeDashboard() {
     })
     console.log("Sale recorded successfully")
     setSelectedService("")
+    setSelectedProduct("")
     setCustomerName("")
     setCustomerContact("")
   }
@@ -91,9 +107,9 @@ export default function EmployeeDashboard() {
   const selectedEmployeeData = employees.find(emp => emp.name === selectedEmployee)
 
   return (
-    <Layout>
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+    <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
+      <div className="space-y-8">
+        <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">Employee Dashboard</h1>
           <ThemeToggle />
         </div>
@@ -148,38 +164,75 @@ export default function EmployeeDashboard() {
             </CardContent>
           </Card>
         )}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Record a Sale</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
+        <Tabs defaultValue="services" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="services">Services</TabsTrigger>
+            <TabsTrigger value="products">Products</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="services">
+            <Card>
+              <CardHeader>
+                <CardTitle>Select Service</CardTitle>
+              </CardHeader>
+              <CardContent>
                 <Input
                   placeholder="Search services..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  className="mb-4"
                 />
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {filteredServices.map((service) => (
-                  <Button
-                    key={service.id}
-                    type="button"
-                    variant={selectedService === service.id ? "default" : "outline"}
-                    onClick={() => setSelectedService(service.id)}
-                    className="h-auto py-2"
-                  >
-                    <div className="flex flex-col items-center">
-                      <span>{service.name}</span>
-                      <span>${service.price.toFixed(2)}</span>
-                    </div>
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {filteredServices.map((service) => (
+                    <Button
+                      key={service.id}
+                      variant={selectedService === service.id ? "default" : "outline"}
+                      onClick={() => setSelectedService(service.id)}
+                      className="h-auto py-2"
+                    >
+                      <div className="flex flex-col items-center">
+                        <span>{service.name}</span>
+                        <span>Kshs {service.price.toFixed(2)}</span>
+                      </div>
+                    </Button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="products">
+            <Card>
+              <CardHeader>
+                <CardTitle>Select Product</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Input
+                  placeholder="Search products..."
+                  value={productSearchTerm}
+                  onChange={(e) => setProductSearchTerm(e.target.value)}
+                  className="mb-4"
+                />
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {filteredProducts.map((product) => (
+                    <Button
+                      key={product.id}
+                      variant={selectedProduct === product.id ? "default" : "outline"}
+                      onClick={() => setSelectedProduct(product.id)}
+                      className="h-auto py-2"
+                    >
+                      <div className="flex flex-col items-center">
+                        <span>{product.name}</span>
+                        <span>Kshs {product.price.toFixed(2)}</span>
+                        <span className="text-sm text-muted-foreground">Stock: {product.stock}</span>
+                      </div>
+                    </Button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
 
         <Card className="mb-8">
           <CardHeader>
@@ -244,7 +297,7 @@ export default function EmployeeDashboard() {
           </Dialog>
         </div>
       </div>
-    </Layout>
+    </div>
   )
 }
 
