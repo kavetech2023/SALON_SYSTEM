@@ -12,7 +12,6 @@ import confetti from 'canvas-confetti'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { toast } from "@/components/ui/toast"
 
 export default function EmployeeDashboard() {
   const [selectedEmployee, setSelectedEmployee] = useState("")
@@ -73,7 +72,6 @@ export default function EmployeeDashboard() {
     setSelectedProduct("")
     setCustomerName("")
     setCustomerContact("")
-    toast.success("Sale recorded successfully!")
   }
 
   const handleError = () => {
@@ -89,7 +87,6 @@ export default function EmployeeDashboard() {
     })
     console.log("Error reported to admin")
     setErrorMessage("")
-    toast.error("Please enter an error message")
   }
 
   const handleComplaint = () => {
