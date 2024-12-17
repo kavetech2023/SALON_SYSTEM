@@ -73,7 +73,7 @@ export default function EmployeeDashboard() {
     setSelectedProduct("")
     setCustomerName("")
     setCustomerContact("")
-    toast.success("Sale recorded successfully")
+    toast.success("Sale recorded successfully!")
   }
 
   const handleError = () => {
@@ -105,7 +105,6 @@ export default function EmployeeDashboard() {
     })
     console.log("Complaint sent to admin")
     setComplaintMessage("")
-    toast.success("Complaint sent to admin")
   }
 
   const selectedEmployeeData = employees.find(emp => emp.name === selectedEmployee)

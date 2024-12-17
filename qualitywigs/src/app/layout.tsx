@@ -4,7 +4,7 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { SalesProvider } from '@/contexts/SalesContext'
 import { ManagementProvider } from '@/contexts/ManagementContext'
 import { ToastProvider } from "@/components/ui/toast"
-import { Toast } from "@/components/ui/toast"
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,8 +25,8 @@ export default function RootLayout({
           <ManagementProvider>
             <SalesProvider>
               <ToastProvider>
-                {children}
-                <Toast />
+                <main>{children}</main>
+                <Toaster />
               </ToastProvider>
             </SalesProvider>
           </ManagementProvider>
