@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { useSales } from "@/contexts/SalesContext"
 import { useManagement } from "@/contexts/ManagementContext"
 import Image from "next/image"
-import confetti from 'canvas-confetti'
+import * as confetti from 'canvas-confetti'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
