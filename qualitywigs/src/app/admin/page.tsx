@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 export default function AdminDashboard() {
   const { sales, loadSales } = useSales()
-  const { employees, services, loadEmployeesAndServices } = useManagement()
+  const { loadEmployeesAndServices } = useManagement()
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0])
 
   useEffect(() => {

@@ -17,7 +17,7 @@ export default function ServicesPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!newService.name || !newService.price) {
-      toast.error("Please fill in all fields")
+      Toast.error("Please fill in all fields")
       return
     }
 
