@@ -4,11 +4,12 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0% 96.1%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
+    --card-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
  
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
@@ -41,6 +42,7 @@
  
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
+    --card-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
  
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
@@ -73,4 +75,11 @@
   body {
     @apply bg-background text-foreground;
   }
-} 
+}
+
+@layer components {
+  .card {
+    @apply bg-card text-card-foreground rounded-lg border shadow-[var(--card-shadow)];
+  }
+}
+
