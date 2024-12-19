@@ -10,8 +10,8 @@ type Sale = {
   amount: number
   employeeName: string
   date: string
-  customerName?: string
-  customerContact?: string
+  customerName: string | null
+  customerContact: string | null
 }
 
 type SalesContextType = {
