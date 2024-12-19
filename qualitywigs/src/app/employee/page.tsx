@@ -34,7 +34,7 @@ export default function EmployeeDashboard() {
     product.name.toLowerCase().includes(productSearchTerm.toLowerCase())
   )
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent | React.MouseEvent) => {
     e.preventDefault()
     if (!selectedEmployee || (!selectedService && !selectedProduct)) {
       console.error("Please select an employee and a service or product")
@@ -256,9 +256,11 @@ export default function EmployeeDashboard() {
         
         <Card>
           <CardContent>
-            <Button onClick={handleSubmit} className="w-full">
-              Record Sale
-            </Button>
+            <form onSubmit={handleSubmit}>
+              <Button type="submit" className="w-full">
+                Record Sale
+              </Button>
+            </form>
           </CardContent>
         </Card>
         
