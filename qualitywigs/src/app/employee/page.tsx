@@ -34,7 +34,7 @@ export default function EmployeeDashboard() {
     product.name.toLowerCase().includes(productSearchTerm.toLowerCase())
   )
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!selectedEmployee || (!selectedService && !selectedProduct)) {
       console.error("Please select an employee and a service or product")
@@ -54,11 +54,11 @@ export default function EmployeeDashboard() {
     }
 
     const newSale = {
-      service: saleItem.name,
+      service: selectedService,
       amount: saleItem.price,
       employeeName: selectedEmployee,
-      customerName: customerName || undefined,
-      customerContact: customerContact || undefined,
+      customerName: customerName || null,
+      customerContact: customerContact || null
     }
 
     addSale(newSale)
