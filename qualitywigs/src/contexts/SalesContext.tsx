@@ -57,16 +57,20 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const addSale = async (newSale: Omit<Sale, 'id' | 'date'>) => {
     try {
-      const saleWithDate = {
-        ...newSale,
+      const saleData = {
+        service: newSale.service,
+        amount: newSale.amount,
+        employeeName: newSale.employeeName,
+        customerName: newSale.customerName || null,
+        customerContact: newSale.customerContact || null,
         date: new Date().toISOString(),
       }
       
       const salesCollection = collection(db, 'qualitywigs', 'sales', 'transactions')
-      const docRef = await addDoc(salesCollection, saleWithDate)
+      const docRef = await addDoc(salesCollection, saleData)
       
       const saleWithId = {
-        ...saleWithDate,
+        ...saleData,
         id: docRef.id,
       }
       
