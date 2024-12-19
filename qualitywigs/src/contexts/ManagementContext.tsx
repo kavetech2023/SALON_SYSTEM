@@ -5,6 +5,7 @@ import { db } from '../lib/firebase'
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 
 
+
 type Employee = {
   id: string
   name: string
