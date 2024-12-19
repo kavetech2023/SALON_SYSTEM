@@ -18,7 +18,7 @@ export default function AdminDashboard() {
   const loadData = useCallback(() => {
     loadSales()
     loadEmployeesAndServices()
-  }, [loadSales, loadEmployeesAndServices])
+  }, [])
 
   useEffect(() => {
     loadData()
