@@ -18,7 +18,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     loadSales()
     loadEmployeesAndServices()
-  },[])
+  }, [loadSales, loadEmployeesAndServices])
 
   const filteredSales = sales.filter(sale => {
     const saleDate = new Date(sale.date).toISOString().split('T')[0]

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { db } from '../lib/firebase'
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy } from 'firebase/firestore'
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 
 type Employee = {
   id: string
