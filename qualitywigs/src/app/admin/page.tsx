@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'
 import { useSales } from "@/contexts/SalesContext"
@@ -15,10 +15,14 @@ export default function AdminDashboard() {
   const { loadEmployeesAndServices } = useManagement()
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0])
 
-  useEffect(() => {
+  const loadData = useCallback(() => {
     loadSales()
     loadEmployeesAndServices()
   }, [loadSales, loadEmployeesAndServices])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
 
   const filteredSales = sales.filter(sale => {
     const saleDate = new Date(sale.date).toISOString().split('T')[0]
@@ -44,8 +48,7 @@ export default function AdminDashboard() {
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
 
   const refreshData = () => {
-    loadSales()
-    loadEmployeesAndServices()
+    loadData()
     // toast.success("Data refreshed successfully!"); // Removed toast functionality
   }
 
