@@ -1,0 +1,13 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /qualitywigs/{document=**} {
+      // Temporarily allow all operations (for development)
+      allow read, write: if true;
+      
+      // Later, you should replace with authenticated rules like:
+      // allow read, write: if request.auth != null;
+    }
+  }
+} 

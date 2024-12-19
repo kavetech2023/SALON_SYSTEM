@@ -1,6 +1,8 @@
 "use client"
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { db } from '../lib/firebase'
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy } from 'firebase/firestore'
 
 type Employee = {
   id: string
@@ -54,80 +56,109 @@ export const ManagementProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [services, setServices] = useState<Service[]>([])
   const [products, setProducts] = useState<Product[]>([])
 
-  const loadEmployeesAndServices = () => {
-    const storedEmployees = localStorage.getItem('employees')
-    const storedServices = localStorage.getItem('services')
-    const storedProducts = localStorage.getItem('products')
-    if (storedEmployees) setEmployees(JSON.parse(storedEmployees))
-    if (storedServices) setServices(JSON.parse(storedServices))
-    if (storedProducts) setProducts(JSON.parse(storedProducts))
+  const loadEmployeesAndServices = async () => {
+    try {
+      const employeesSnapshot = await getDocs(collection(db, 'qualitywigs', 'management', 'employees'))
+      const servicesSnapshot = await getDocs(collection(db, 'qualitywigs', 'management', 'services'))
+      const productsSnapshot = await getDocs(collection(db, 'qualitywigs', 'management', 'products'))
+
+      setEmployees(employeesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Employee)))
+      setServices(servicesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Service)))
+      setProducts(productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product)))
+    } catch (error) {
+      console.error('Error loading data:', error)
+    }
   }
 
   useEffect(() => {
     loadEmployeesAndServices()
   }, [])
 
-  const addEmployee = (employee: Omit<Employee, 'id'>) => {
-    const newEmployee = { id: Date.now().toString(), ...employee }
-    const updatedEmployees = [...employees, newEmployee]
-    setEmployees(updatedEmployees)
-    localStorage.setItem('employees', JSON.stringify(updatedEmployees))
+  const addEmployee = async (employee: Omit<Employee, 'id'>) => {
+    try {
+      const docRef = await addDoc(collection(db, 'qualitywigs', 'management', 'employees'), employee)
+      const newEmployee = { id: docRef.id, ...employee }
+      setEmployees(prev => [...prev, newEmployee])
+    } catch (error) {
+      console.error('Error adding employee:', error)
+    }
   }
 
-  const updateEmployee = (id: string, updatedEmployee: Omit<Employee, 'id'>) => {
-    const updatedEmployees = employees.map(emp => 
-      emp.id === id ? { ...emp, ...updatedEmployee } : emp
-    )
-    setEmployees(updatedEmployees)
-    localStorage.setItem('employees', JSON.stringify(updatedEmployees))
+  const updateEmployee = async (id: string, updatedEmployee: Omit<Employee, 'id'>) => {
+    try {
+      const employeeRef = doc(db, 'qualitywigs', 'management', 'employees', id)
+      await updateDoc(employeeRef, updatedEmployee)
+      setEmployees(prev => prev.map(emp => emp.id === id ? { ...emp, ...updatedEmployee } : emp))
+    } catch (error) {
+      console.error('Error updating employee:', error)
+    }
   }
 
-  const removeEmployee = (id: string) => {
-    const updatedEmployees = employees.filter(emp => emp.id !== id)
-    setEmployees(updatedEmployees)
-    localStorage.setItem('employees', JSON.stringify(updatedEmployees))
+  const removeEmployee = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'qualitywigs', 'management', 'employees', id))
+      setEmployees(prev => prev.filter(emp => emp.id !== id))
+    } catch (error) {
+      console.error('Error removing employee:', error)
+    }
   }
 
-  const addService = (name: string, price: number) => {
-    const newService = { id: Date.now().toString(), name, price }
-    const updatedServices = [...services, newService]
-    setServices(updatedServices)
-    localStorage.setItem('services', JSON.stringify(updatedServices))
+  const addService = async (name: string, price: number) => {
+    try {
+      const docRef = await addDoc(collection(db, 'qualitywigs', 'management', 'services'), { name, price })
+      const newService = { id: docRef.id, name, price }
+      setServices(prev => [...prev, newService])
+    } catch (error) {
+      console.error('Error adding service:', error)
+    }
   }
 
-  const removeService = (id: string) => {
-    const updatedServices = services.filter(service => service.id !== id)
-    setServices(updatedServices)
-    localStorage.setItem('services', JSON.stringify(updatedServices))
+  const removeService = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'qualitywigs', 'management', 'services', id))
+      setServices(prev => prev.filter(service => service.id !== id))
+    } catch (error) {
+      console.error('Error removing service:', error)
+    }
   }
 
-  const addProduct = (name: string, price: number, stock: number) => {
-    const newProduct = { id: Date.now().toString(), name, price, stock }
-    const updatedProducts = [...products, newProduct]
-    setProducts(updatedProducts)
-    localStorage.setItem('products', JSON.stringify(updatedProducts))
+  const addProduct = async (name: string, price: number, stock: number) => {
+    try {
+      const docRef = await addDoc(collection(db, 'qualitywigs', 'management', 'products'), { name, price, stock })
+      const newProduct = { id: docRef.id, name, price, stock }
+      setProducts(prev => [...prev, newProduct])
+    } catch (error) {
+      console.error('Error adding product:', error)
+    }
   }
 
-  const removeProduct = (id: string) => {
-    const updatedProducts = products.filter(product => product.id !== id)
-    setProducts(updatedProducts)
-    localStorage.setItem('products', JSON.stringify(updatedProducts))
+  const removeProduct = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'qualitywigs', 'management', 'products', id))
+      setProducts(prev => prev.filter(product => product.id !== id))
+    } catch (error) {
+      console.error('Error removing product:', error)
+    }
   }
 
-  const updateService = (id: string, updatedService: { name: string; price: number }) => {
-    const updatedServices = services.map(service => 
-      service.id === id ? { ...service, ...updatedService } : service
-    )
-    setServices(updatedServices)
-    localStorage.setItem('services', JSON.stringify(updatedServices))
+  const updateService = async (id: string, updatedService: { name: string; price: number }) => {
+    try {
+      const serviceRef = doc(db, 'qualitywigs', 'management', 'services', id)
+      await updateDoc(serviceRef, updatedService)
+      setServices(prev => prev.map(service => service.id === id ? { ...service, ...updatedService } : service))
+    } catch (error) {
+      console.error('Error updating service:', error)
+    }
   }
 
-  const updateProduct = (id: string, updatedProduct: { name: string; price: number; stock: number }) => {
-    const updatedProducts = products.map(product => 
-      product.id === id ? { ...product, ...updatedProduct } : product
-    )
-    setProducts(updatedProducts)
-    localStorage.setItem('products', JSON.stringify(updatedProducts))
+  const updateProduct = async (id: string, updatedProduct: { name: string; price: number; stock: number }) => {
+    try {
+      const productRef = doc(db, 'qualitywigs', 'management', 'products', id)
+      await updateDoc(productRef, updatedProduct)
+      setProducts(prev => prev.map(product => product.id === id ? { ...product, ...updatedProduct } : product))
+    } catch (error) {
+      console.error('Error updating product:', error)
+    }
   }
 
   return (

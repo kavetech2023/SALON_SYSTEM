@@ -1,6 +1,8 @@
 "use client"
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { db } from '../lib/firebase'
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy } from 'firebase/firestore'
 
 type Sale = {
   id: string
@@ -34,10 +36,18 @@ export const useSales = () => {
 export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [sales, setSales] = useState<Sale[]>([])
 
-  const loadSales = () => {
-    const storedSales = localStorage.getItem('sales')
-    if (storedSales) {
-      setSales(JSON.parse(storedSales))
+  const loadSales = async () => {
+    try {
+      const salesCollection = collection(db, 'qualitywigs', 'sales', 'transactions')
+      const q = query(salesCollection, orderBy('date', 'desc'))
+      const querySnapshot = await getDocs(q)
+      const salesData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Sale[]
+      setSales(salesData)
+    } catch (error) {
+      console.error('Error loading sales:', error)
     }
   }
 
@@ -45,30 +55,51 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     loadSales()
   }, [])
 
-  const addSale = (newSale: Omit<Sale, 'id' | 'date'>) => {
-    const saleWithIdAndDate = {
-      ...newSale,
-      id: Date.now().toString(),
-      date: new Date().toISOString(),
+  const addSale = async (newSale: Omit<Sale, 'id' | 'date'>) => {
+    try {
+      const saleWithDate = {
+        ...newSale,
+        date: new Date().toISOString(),
+      }
+      
+      const salesCollection = collection(db, 'qualitywigs', 'sales', 'transactions')
+      const docRef = await addDoc(salesCollection, saleWithDate)
+      
+      const saleWithId = {
+        ...saleWithDate,
+        id: docRef.id,
+      }
+      
+      setSales(prevSales => [saleWithId, ...prevSales])
+      notifyAdmin(saleWithId)
+    } catch (error) {
+      console.error('Error adding sale:', error)
     }
-    const updatedSales = [saleWithIdAndDate, ...sales]
-    setSales(updatedSales)
-    localStorage.setItem('sales', JSON.stringify(updatedSales))
-    notifyAdmin(saleWithIdAndDate)
   }
 
-  const removeSale = (id: string) => {
-    const updatedSales = sales.filter(sale => sale.id !== id)
-    setSales(updatedSales)
-    localStorage.setItem('sales', JSON.stringify(updatedSales))
+  const removeSale = async (id: string) => {
+    try {
+      const saleRef = doc(db, 'qualitywigs', 'sales', 'transactions', id)
+      await deleteDoc(saleRef)
+      setSales(prevSales => prevSales.filter(sale => sale.id !== id))
+    } catch (error) {
+      console.error('Error removing sale:', error)
+    }
   }
 
-  const updateSale = (id: string, updatedSale: Omit<Sale, 'id' | 'date'>) => {
-    const updatedSales = sales.map(sale => 
-      sale.id === id ? { ...sale, ...updatedSale } : sale
-    )
-    setSales(updatedSales)
-    localStorage.setItem('sales', JSON.stringify(updatedSales))
+  const updateSale = async (id: string, updatedSale: Omit<Sale, 'id' | 'date'>) => {
+    try {
+      const saleRef = doc(db, 'qualitywigs', 'sales', 'transactions', id)
+      await updateDoc(saleRef, updatedSale)
+      
+      setSales(prevSales =>
+        prevSales.map(sale =>
+          sale.id === id ? { ...sale, ...updatedSale } : sale
+        )
+      )
+    } catch (error) {
+      console.error('Error updating sale:', error)
+    }
   }
 
   const notifyAdmin = (notification: Sale | { type: 'error' | 'complaint', message: string, employeeName: string, date: string }) => {
