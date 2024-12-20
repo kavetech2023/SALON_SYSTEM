@@ -58,7 +58,7 @@ export default function EmployeesPage() {
           <CardTitle>Manage Employees</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex space-x-2 mb-4">
+          <div className="flex flex-col space-y-2 mb-4 sm:flex-row sm:space-y-0 sm:space-x-2">
             <Input
               placeholder="New employee name"
               value={newEmployeeName}
