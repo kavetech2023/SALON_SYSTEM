@@ -54,7 +54,7 @@ export default function EmployeeDashboard() {
     }
 
     const newSale = {
-      service: selectedService,
+      service: saleItem.name,
       amount: saleItem.price,
       employeeName: selectedEmployee,
       customerName: customerName || null,
