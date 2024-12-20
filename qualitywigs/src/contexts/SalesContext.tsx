@@ -57,6 +57,7 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const addSale = async (newSale: Omit<Sale, 'id' | 'date'>) => {
     try {
+      console.log('New sale data:', newSale);
       const saleData = {
         service: newSale.service,
         amount: newSale.amount,
@@ -64,7 +65,8 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         customerName: newSale.customerName || null,
         customerContact: newSale.customerContact || null,
         date: new Date().toISOString(),
-      }
+      };
+      console.log('Formatted sale data for Firestore:', saleData);
       
       const salesCollection = collection(db, 'qualitywigs', 'sales', 'transactions')
       const docRef = await addDoc(salesCollection, saleData)
@@ -121,4 +123,3 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     </SalesContext.Provider>
   )
 }
-
