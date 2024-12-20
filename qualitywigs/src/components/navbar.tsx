@@ -38,9 +38,6 @@ export function Navbar() {
             <Link href="/admin/services">
               <Button variant="ghost">Services</Button>
             </Link>
-            <Link href="/employee">
-              <Button variant="ghost">Employee Portal</Button>
-            </Link>
             <ThemeToggle />
           </div>
 
@@ -100,13 +97,6 @@ export function Navbar() {
               onClick={() => setIsOpen(false)}
             >
               Services
-            </Link>
-            <Link
-              href="/employee"
-              className="block px-3 py-2 text-base font-medium hover:bg-accent"
-              onClick={() => setIsOpen(false)}
-            >
-              Employee Portal
             </Link>
           </div>
         </div>
