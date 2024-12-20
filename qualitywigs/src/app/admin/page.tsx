@@ -140,6 +140,7 @@ export default function AdminDashboard() {
                     <TableHead>Service</TableHead>
                     <TableHead>Amount</TableHead>
                     <TableHead>Employee</TableHead>
+                    <TableHead>Commission (%)</TableHead>
                     <TableHead>Date</TableHead>
                     <TableHead>Customer</TableHead>
                   </TableRow>
@@ -150,6 +151,7 @@ export default function AdminDashboard() {
                       <TableCell className="font-medium">{sale.service}</TableCell>
                       <TableCell>Kshs {sale.amount.toFixed(2)}</TableCell>
                       <TableCell>{sale.employeeName}</TableCell>
+                      <TableCell>{(sale.commissionPercentage || 0).toFixed(2)}%</TableCell>
                       <TableCell>{new Date(sale.date).toLocaleString()}</TableCell>
                       <TableCell>
                         {sale.customerName && `${sale.customerName}`}

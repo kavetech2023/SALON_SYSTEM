@@ -12,6 +12,7 @@ type Sale = {
   date: string
   customerName: string | null
   customerContact: string | null
+  commissionPercentage: number
 }
 
 type SalesContextType = {
@@ -65,6 +66,8 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         customerName: newSale.customerName || null,
         customerContact: newSale.customerContact || null,
         date: new Date().toISOString(),
+        commissionPercentage: newSale.commissionPercentage || 0, // Ensure this is included
+
       };
       console.log('Formatted sale data for Firestore:', saleData);
       

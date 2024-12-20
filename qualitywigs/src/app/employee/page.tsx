@@ -25,6 +25,7 @@ export default function EmployeeDashboard() {
   const [complaintMessage, setComplaintMessage] = useState("")
   const { addSale, notifyAdmin } = useSales()
   const { employees, services, products } = useManagement()
+  const [commissionPercentage, setCommissionPercentage] = useState<number | string>("");
 
   const filteredServices = services.filter(service =>
     service.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -58,7 +59,8 @@ export default function EmployeeDashboard() {
       amount: saleItem.price,
       employeeName: selectedEmployee,
       customerName: customerName || null,
-      customerContact: customerContact || null
+      customerContact: customerContact || null,
+      commissionPercentage: parseFloat(commissionPercentage as string) || 0,
     }
 
     addSale(newSale)
@@ -147,20 +149,28 @@ export default function EmployeeDashboard() {
               <CardTitle>Selected Employee</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center space-x-4">
-                <Image
-                  src={selectedEmployeeData.photo || "/placeholder.svg"}
-                  alt={selectedEmployeeData.name}
-                  width={100}
-                  height={100}
-                  className="rounded-full"
-                />
-                <div>
-                  <h2 className="text-2xl font-bold">{selectedEmployeeData.name}</h2>
-                  <p>{selectedEmployeeData.email}</p>
-                  <p>{selectedEmployeeData.phone}</p>
-                </div>
-              </div>
+            <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+  <Image
+    src={selectedEmployeeData.photo || "/placeholder.svg"}
+    alt={selectedEmployeeData.name}
+    width={100}
+    height={100}
+    className="rounded-full border border-gray-300 shadow-sm"
+  />
+  <div className="text-center md:text-left">
+    <h2 className="text-xl md:text-2xl font-bold text-gray-800">
+      {selectedEmployeeData.name}
+    </h2>
+    <Input
+      placeholder="Commission Percentage"
+      type="number"
+      value={commissionPercentage}
+      onChange={(e) => setCommissionPercentage(e.target.value)}
+      className="mt-2 block w-full max-w-xs border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    />
+  </div>
+</div>
+
             </CardContent>
           </Card>
         )}
